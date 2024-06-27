@@ -1,0 +1,365 @@
+<html lang="us">
+<head>
+    <title>Test app</title>
+    <style>
+        .card {
+            margin: 20px 10px;
+            width: 150px;
+            height: 300px;
+            font-size: 20px;
+            display: block;
+            text-align: center;
+        }
+
+        .card-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            font-size: 18px;
+            padding: 5px 10px;
+            margin-right: 10px;
+        }
+
+        .initial{
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .card-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .red-card {
+            border: 2px solid red;
+        }
+
+        .black-card {
+            border: 2px solid black;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .card-total {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: white;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+        }
+
+        .coat {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="display_card" style="display: none;">
+        <div class="card-text" id="card_display">
+            1 hearts
+        </div>
+    </div>
+
+    <div>
+        <div class="btn-container">
+            <button type="button" class="btn disabled-btn" onclick="newCard()" disabled>
+                new card
+            </button>
+
+            <button type="button" class="btn disabled-btn" onclick="done()" disabled>
+                done
+            </button>
+
+            <button type="button" class="btn" onclick="newGame()">
+                new game
+            </button>
+        </div>
+
+        <div id="card_container" class="card-container">
+        </div>
+
+        <div id="card_total" class="card-total green">
+        </div>
+
+        <div id="card_total_machine" class="card-total green">
+        </div>
+
+        <div id="initial_info" class="initial">
+            click "new game" to start, when you are satisfied with the result click "done"
+        </div>
+    </div>
+
+    <script>
+        class Card {
+            constructor(value, color, coat, displayText) {
+                this.value = value;
+                this.color = color;
+                this.coat = coat;
+                this.displayText = displayText;
+            }
+        }
+
+        class TotalHelper {
+            constructor(html, total) {
+                this.html = html;
+                this.total = total;
+            }
+        }
+
+        let deckOfCards = [];
+        let usedIndexes = [];
+        let totalValue = [];
+
+        deckOfCards.push(new Card(1, 'red', 'hearts', 'A'));
+        deckOfCards.push(new Card(1, 'black', 'clubs', 'A'));
+        deckOfCards.push(new Card(1, 'red', 'diamonds', 'A'));
+        deckOfCards.push(new Card(1, 'black', 'spades', 'A'));
+
+        deckOfCards.push(new Card(2, 'red', 'hearts', '2'));
+        deckOfCards.push(new Card(2, 'black', 'clubs', '2'));
+        deckOfCards.push(new Card(2, 'red', 'diamonds', '2'));
+        deckOfCards.push(new Card(2, 'black', 'spades', '2'));
+
+        deckOfCards.push(new Card(3, 'red', 'hearts', '3'));
+        deckOfCards.push(new Card(3, 'black', 'clubs', '3'));
+        deckOfCards.push(new Card(3, 'red', 'diamonds', '3'));
+        deckOfCards.push(new Card(3, 'black', 'spades', '3'));
+
+        deckOfCards.push(new Card(4, 'red', 'hearts', '4'));
+        deckOfCards.push(new Card(4, 'black', 'clubs', '4'));
+        deckOfCards.push(new Card(4, 'red', 'diamonds', '4'));
+        deckOfCards.push(new Card(4, 'black', 'spades', '4'));
+
+        deckOfCards.push(new Card(5, 'red', 'hearts', '5'));
+        deckOfCards.push(new Card(5, 'black', 'clubs', '5'));
+        deckOfCards.push(new Card(5, 'red', 'diamonds', '5'));
+        deckOfCards.push(new Card(5, 'black', 'spades', '5'));
+
+        deckOfCards.push(new Card(6, 'red', 'hearts', '6'));
+        deckOfCards.push(new Card(6, 'black', 'clubs', '6'));
+        deckOfCards.push(new Card(6, 'red', 'diamonds', '6'));
+        deckOfCards.push(new Card(6, 'black', 'spades', '6'));
+
+        deckOfCards.push(new Card(7, 'red', 'hearts', '7'));
+        deckOfCards.push(new Card(7, 'black', 'clubs', '7'));
+        deckOfCards.push(new Card(7, 'red', 'diamonds', '7'));
+        deckOfCards.push(new Card(7, 'black', 'spades', '7'));
+
+        deckOfCards.push(new Card(8, 'red', 'hearts', '8'));
+        deckOfCards.push(new Card(8, 'black', 'clubs', '8'));
+        deckOfCards.push(new Card(8, 'red', 'diamonds', '8'));
+        deckOfCards.push(new Card(8, 'black', 'spades', '8'));
+
+        deckOfCards.push(new Card(9, 'red', 'hearts', '9'));
+        deckOfCards.push(new Card(9, 'black', 'clubs', '9'));
+        deckOfCards.push(new Card(9, 'red', 'diamonds', '9'));
+        deckOfCards.push(new Card(9, 'black', 'spades', '9'));
+
+        deckOfCards.push(new Card(10, 'red', 'hearts', '10'));
+        deckOfCards.push(new Card(10, 'black', 'clubs', '10'));
+        deckOfCards.push(new Card(10, 'red', 'diamonds', '10'));
+        deckOfCards.push(new Card(10, 'black', 'spades', '10'));
+
+        deckOfCards.push(new Card(10, 'red', 'hearts', 'J'));
+        deckOfCards.push(new Card(10, 'black', 'clubs', 'J'));
+        deckOfCards.push(new Card(10, 'red', 'diamonds', 'J'));
+        deckOfCards.push(new Card(10, 'black', 'spades', 'J'));
+
+        deckOfCards.push(new Card(10, 'red', 'hearts', 'Q'));
+        deckOfCards.push(new Card(10, 'black', 'clubs', 'Q'));
+        deckOfCards.push(new Card(10, 'red', 'diamonds', 'Q'));
+        deckOfCards.push(new Card(10, 'black', 'spades', 'Q'));
+
+        deckOfCards.push(new Card(10, 'red', 'hearts', 'K'));
+        deckOfCards.push(new Card(10, 'black', 'clubs', 'K'));
+        deckOfCards.push(new Card(10, 'red', 'diamonds', 'K'));
+        deckOfCards.push(new Card(10, 'black', 'spades', 'K'));
+    </script>
+
+    <script>
+        function newCard() {
+            let cc = document.getElementById('card_container');
+            let result = getNewCard('u');
+            cc.appendChild(result.html);
+            cc.style.display = 'flex';
+
+            let total = setTotal('card_total');
+            if (total > 21) {
+                disableButtons();
+                clearColor();
+                document.getElementById('card_total').classList.add('red');
+            }
+        }
+
+        function done() {
+            usedIndexes = [];
+            disableButtons();
+
+            let cc = document.getElementById('card_container');
+            cc.innerHTML = "";
+
+            setTotal('card_total_machine', 0);
+
+            let userTotal = sumTotal();
+            let machineTotal = 0;
+
+            while (true) {
+                let result = getNewCard('M');
+                cc.appendChild(result.html);
+
+                machineTotal += result.total;
+                setTotal('card_total_machine', machineTotal);
+
+                if (machineTotal > userTotal && machineTotal <= 21) {
+                    break;
+                }
+
+                if (machineTotal >= 21) {
+                    break;
+                }
+            }
+
+            clearColor();
+
+            if (machineTotal > userTotal && machineTotal <= 21) {
+                document.getElementById('card_total').classList.add('red');
+                document.getElementById('card_total_machine').classList.add('green');
+            }
+            else if (userTotal === machineTotal){
+                document.getElementById('card_total').classList.add('yellow');
+                document.getElementById('card_total_machine').classList.add('yellow');
+            }
+            else {
+                document.getElementById('card_total').classList.add('green');
+                document.getElementById('card_total_machine').classList.add('red');
+            }
+        }
+
+        function newGame() {
+            usedIndexes = [];
+            totalValue = [];
+
+            document.getElementById('initial_info').style.display = 'none';
+
+            clearColor();
+            document.getElementById('card_total').classList.add('green');
+            document.getElementById('card_total_machine').style.display = 'none';
+
+            let cc = document.getElementById('card_container');
+            cc.innerHTML = "";
+            cc.style.display = 'flex';
+
+            let result = getNewCard('u');
+            cc.appendChild(result.html);
+
+            result = getNewCard('u');
+            cc.appendChild(result.html);
+
+            setTotal('card_total');
+
+            for(let e of document.getElementsByClassName("disabled-btn")) {
+                e.removeAttribute("disabled");
+            }
+        }
+
+        function getNewCard(type) {
+            let i = getRndInteger();
+
+            let card = document.getElementById('display_card');
+            let clone = card.cloneNode(true);
+            clone.style.display = 'block';
+            clone.id = "display_card_" + type + i;
+
+            let c = deckOfCards[i];
+
+            clone.children[0].id = "display_card_" + type + i;
+            clone.children[0].innerHTML = c.displayText + ' <span class="coat">' + c.coat + '</span>';
+            clone.children[0].classList.add(c.color + '-card');
+
+            totalValue.push(c.value);
+
+            return new TotalHelper(clone, c.value);
+        }
+
+        function getRndInteger() {
+            let min = 0;
+            let max = 51;
+            let i = Math.floor(Math.random() * (max - min)) + min;
+
+            if (usedIndexes.indexOf(i) === -1) {
+                usedIndexes.push(i);
+                return  i;
+            }
+
+            return getRndInteger();
+        }
+
+        function setTotal(containerId, value) {
+            let totalVal = value !== undefined ? value : sumTotal();
+            let who = containerId === 'card_total' ? "U" : "M";
+            let total = document.getElementById(containerId);
+            total.innerHTML = who + ' ' + totalVal; // sum of all card values
+            total.style.display = 'flex';
+
+            return totalVal;
+        }
+
+        function disableButtons() {
+            for(let e of document.getElementsByClassName("disabled-btn")) {
+                e.setAttribute("disabled", "disabled");
+            }
+        }
+
+        function sumTotal(){
+            return totalValue.reduce((a, b) => a + b, 0);
+        }
+
+        function clearColor() {
+            let cartTotal = document.getElementById('card_total');
+            let machineCartTotal = document.getElementById('card_total_machine');
+
+            cartTotal.classList.remove('red');
+            cartTotal.classList.remove('green');
+            cartTotal.classList.remove('yellow');
+
+            machineCartTotal.classList.remove('red');
+            machineCartTotal.classList.remove('green');
+            machineCartTotal.classList.remove('yellow');
+        }
+    </script>
+</body>
+</html>
